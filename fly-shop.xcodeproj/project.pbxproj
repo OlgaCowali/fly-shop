@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B6C46F282E9E518C00F6AAED /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = B6C46F272E9E518C00F6AAED /* Alamofire */; };
+		B6C46F2A2E9E518C00F6AAED /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = B6C46F292E9E518C00F6AAED /* AlamofireDynamic */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B6C46EB62E9CE0DA00F6AAED /* fly-shop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fly-shop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6C46F282E9E518C00F6AAED /* Alamofire in Frameworks */,
+				B6C46F2A2E9E518C00F6AAED /* AlamofireDynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +72,8 @@
 			);
 			name = "fly-shop";
 			packageProductDependencies = (
+				B6C46F272E9E518C00F6AAED /* Alamofire */,
+				B6C46F292E9E518C00F6AAED /* AlamofireDynamic */,
 			);
 			productName = "fly-shop";
 			productReference = B6C46EB62E9CE0DA00F6AAED /* fly-shop.app */;
@@ -94,6 +103,9 @@
 			);
 			mainGroup = B6C46EAD2E9CE0DA00F6AAED;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B6C46F262E9E518C00F6AAED /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B6C46EB72E9CE0DA00F6AAED /* Products */;
 			projectDirPath = "";
@@ -326,6 +338,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B6C46F262E9E518C00F6AAED /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B6C46F272E9E518C00F6AAED /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6C46F262E9E518C00F6AAED /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		B6C46F292E9E518C00F6AAED /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B6C46F262E9E518C00F6AAED /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B6C46EAE2E9CE0DA00F6AAED /* Project object */;
 }
