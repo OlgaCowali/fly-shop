@@ -1,5 +1,5 @@
 //
-//  fly_shopApp.swift
+//  FlyShopApp.swift
 //  fly-shop
 //
 //  Created by Olga Covaliova on 13.10.2025.
