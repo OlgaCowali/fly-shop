@@ -1,5 +1,5 @@
 //
-//  CartItem.swift
+//  Product.swift
 //  fly-shop
 //
 //  Created by Olga Covaliova on 13.10.2025.
@@ -24,7 +24,7 @@ struct Product: Identifiable, Codable {
         imageURL: String,
         category: Category,
         quantity: Int = 0,
-        customerType: CustomerType = .retail
+        customerType: CustomerType
     ) {
         self.id = id
         self.name = name
