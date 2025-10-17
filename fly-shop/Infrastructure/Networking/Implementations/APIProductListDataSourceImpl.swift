@@ -9,16 +9,20 @@ import Foundation
 
 class APIProductListDataSourceImpl: APIProductsDataSource {
     
-    private let httpClient = HTTPClient()
     private let baseURL = APIConstant.baseURLString
     private let allProductsURL = APIConstant.allProductsDataURL
     private let defaultCustomerType = "retail"
     
-    // Dependencies for fetching customer types and categories
+    // Dependency for fetching customer types
     private let customerTypeDataSource: APICustomerTypeDataSource
+    private let httpClient: HTTPClientProtocol
     
-    init(customerTypeDataSource: APICustomerTypeDataSource, categoriesDataSource: APICategoriesDataSource) {
+    init(
+        customerTypeDataSource: APICustomerTypeDataSource,
+        httpClient: HTTPClientProtocol = HTTPClient()
+    ) {
         self.customerTypeDataSource = customerTypeDataSource
+        self.httpClient = httpClient
     }
     
     func getProducts(for customerType: CustomerType, category: Category?) async -> Result<[ProductDTO], HTTPClientError> {
@@ -40,7 +44,7 @@ class APIProductListDataSourceImpl: APIProductsDataSource {
         
         switch result {
         case .success(let data):
-            if let category = category {
+            if category != nil {
                 // Response is directly an array of ProductDTO for the specific category
                 guard let products = try? JSONDecoder().decode([ProductDTO].self, from: data) else {
                     return .failure(.parsingError)
