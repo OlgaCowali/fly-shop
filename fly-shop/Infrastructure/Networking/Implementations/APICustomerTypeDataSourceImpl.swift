@@ -9,8 +9,12 @@ import Foundation
 
 class APICustomerTypeDataSourceImpl: APICustomerTypeDataSource {
 
-    private let httpClient = HTTPClient()
+    private let httpClient: HTTPClientProtocol
     private let customerTypeURL: String = APIConstant.baseURLString + APIConstant.customerTypeURL
+    
+    init(httpClient: HTTPClientProtocol = HTTPClient()) {
+        self.httpClient = httpClient
+    }
     
     func getCustomerTypes() async -> Result<[CustomerTypeDTO], HTTPClientError> {
         // Fetch customer types from the API

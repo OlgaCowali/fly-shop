@@ -1,5 +1,5 @@
 //
-//  AIPCategoriesSataSourceImpl.swift
+//  APICategoriesDataSourceImpl.swift
 //  fly-shop
 //
 //  Created by Olga Covaliova on 14.10.2025.
@@ -7,10 +7,14 @@
 
 import Foundation
 
-class AIPCategoriesSataSourceImpl: APICategoriesDataSource {
+class APICategoriesDataSourceImpl: APICategoriesDataSource {
     
-    private let httpClient = HTTPClient()
+    private let httpClient: HTTPClientProtocol
     private let catigoriesURL: String = APIConstant.baseURLString + APIConstant.productCategoryURL
+    
+    init(httpClient: HTTPClientProtocol = HTTPClient()) {
+        self.httpClient = httpClient
+    }
     
     func getCategories() async -> Result<[CategoryDTO], HTTPClientError> {
         // Fetch categories from the API
