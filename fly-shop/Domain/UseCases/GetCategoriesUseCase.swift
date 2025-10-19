@@ -9,7 +9,7 @@ import Foundation
 
 // Protocol defining the contract for retrieving categories
 protocol GetCategories {
-    func execute() async throws -> Result<[Category], DomainError>
+    func execute() async -> Result<[Category], DomainError>
 }
 
 // Use case responsible for fetching available categories
@@ -22,7 +22,7 @@ final class GetCategoriesUseCase: GetCategories {
     }
     
     // Retrieves all available categories
-    func execute() async throws -> Result<[Category], DomainError> {
+    func execute() async -> Result<[Category], DomainError> {
         // Fetch categories from repository
         let result = await repository.getCategories()
         

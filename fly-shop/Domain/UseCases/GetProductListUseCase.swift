@@ -10,7 +10,7 @@ import Foundation
 // Protocol defining the contract for retrieving a product list
 protocol GetProductList {
     func execute(for customerType: CustomerType,
-                 filteredBy category: Category?) async throws -> Result<[Product], DomainError>
+                 filteredBy category: Category?) async -> Result<[Product], DomainError>
 }
 
 // Use case responsible for fetching and filtering products based on customer type and category
@@ -26,7 +26,7 @@ final class GetProductListUseCase: GetProductList {
     func execute(
         for customerType: CustomerType,
         filteredBy category: Category? = nil
-    ) async throws -> Result<[Product], DomainError> {
+    ) async -> Result<[Product], DomainError> {
         // Fetch products from repository
         let result = await repository.getProducts(for: customerType, category: category)
         

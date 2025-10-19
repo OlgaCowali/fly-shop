@@ -9,7 +9,7 @@ import Foundation
 
 // Protocol defining the contract for retrieving customer types
 protocol GetCustomerTypes {
-    func execute() async throws -> Result<[CustomerType], DomainError>
+    func execute() async -> Result<[CustomerType], DomainError>
 }
 
 // Use case responsible for fetching available customer types
@@ -22,7 +22,7 @@ final class GetCustomerTypesUseCase: GetCustomerTypes {
     }
     
     // Retrieves all available customer types
-    func execute() async throws -> Result<[CustomerType], DomainError> {
+    func execute() async -> Result<[CustomerType], DomainError> {
         // Fetch customer types from repository
         let result = await repository.getCustomerTypes()
         
