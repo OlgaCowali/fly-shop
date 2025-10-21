@@ -106,8 +106,8 @@ private extension ProductCardView {
     var priceBadge: some View {
         // Price display formatted to 2 decimals; shown only if USD price exists
         Group {
-            if let price = product.prices[.usd], let formatted = Self.priceFormatter.string(from: NSDecimalNumber(decimal: price)) {
-                Text("\(formatted)\(ProductListConstants.priceCurrencySuffix)")
+            if let price = product.prices[.usd], let formatted = PriceFormatter.format(price: price) {
+                Text(formatted)
                     .font(ProductListConstants.priceFont)
                     .fontWeight(ProductListConstants.priceFontWeight)
                     .foregroundColor(ProductListConstants.priceTextColor)
@@ -134,17 +134,4 @@ private extension ProductCardView {
                 .fill(Color.gray.opacity(ProductListConstants.imagePlaceholderOpacity))
         }
     }
-}
-
-// MARK: - Formatters
-
-private extension ProductCardView {
-    static let priceFormatter: NumberFormatter = {
-        // Shared price formatter for consistent monetary display
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = ProductListConstants.priceMinimumFractionDigits
-        formatter.maximumFractionDigits = ProductListConstants.priceMaximumFractionDigits
-        return formatter
-    }()
 }
