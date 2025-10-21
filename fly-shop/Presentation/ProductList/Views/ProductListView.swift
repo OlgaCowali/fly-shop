@@ -25,6 +25,19 @@ struct ProductListView: View {
                     .fontWeight(ProductListConstants.titleFontWeight)
                     .padding(.top, ProductListConstants.titleTopPadding)
                 
+                // Category Filter
+                HStack {
+                    CategoryFilterView(
+                        selectedCategory: viewModel.selectedCategory,
+                        categories: viewModel.categories,
+                        onSelect: { category in
+                            viewModel.selectCategory(category)
+                        }
+                    )
+                    Spacer()
+                }
+                .padding(.horizontal, ProductListConstants.contentPadding)
+                
                 // Product List
                 switch viewModel.state {
                 case .loading:

@@ -55,9 +55,11 @@ enum ProductListConstants {
     // Bottom bar
     static let bottomBarSpacing: CGFloat = 12
     static let bottomBarPadding: CGFloat = 10
+    static let buttonsForegroundColor: Color = .white
+    
+    // Icons
     static let plusButtonName = "plus"
     static let minusButtonName = "minus"
-    static let buttonsForegroundColor: Color = .white
 
     // Price badge
     static let priceFont: Font = .subheadline
@@ -79,4 +81,28 @@ enum ProductListConstants {
     // Formatting
     static let priceMinimumFractionDigits: Int = 2
     static let priceMaximumFractionDigits: Int = 2
+
+    // MARK: - Category Filter
+    
+    // Text
+    static let filterPrefixText: String = "Filter:"
+    static let allProductsText: String = "All Products"
+    static let selectCategoryTitle: String = "Select Category"
+    
+    // Typography
+    static let filterTextFont: Font = .callout
+    static let filterIconFont: Font = .caption
+    
+    // Colors
+    static let filterTextColor: Color = .black.opacity(0.7)
+    static let filterIconColor: Color = .black.opacity(0.7)
+    static let filterBackgroundColor: Color = .gray.opacity(0.3)
+    
+    // Layout
+    static let filterHorizontalPadding: CGFloat = 12
+    static let filterVerticalPadding: CGFloat = 8
+    static let filterCornerRadius: CGFloat = 20
+    
+    // Icons
+    static let filterDropdownIcon: String = "arrowtriangle.down.fill"
 }
