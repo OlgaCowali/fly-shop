@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct FlyShopApp: App {
+    
+    @StateObject private var compositionRoot = CompositionRoot()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ProductListView(
+                viewModel: compositionRoot.makeProductListViewModel()
+            )
         }
     }
 }
