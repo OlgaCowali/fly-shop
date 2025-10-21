@@ -15,7 +15,7 @@ struct ProductCardView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
-                backgroundImage(size: geometry.size)
+                createBackgroundImage(size: geometry.size)
                 gradientOverlay
                 contentOverlay
             }
@@ -121,7 +121,7 @@ private extension ProductCardView {
         }
     }
     
-    func backgroundImage(size: CGSize) -> some View {
+    func createBackgroundImage(size: CGSize) -> some View {
         // Async image loading with simple placeholder, scaled to fill the card bounds
         AsyncImage(url: URL(string: product.imageURL)) { image in
             image

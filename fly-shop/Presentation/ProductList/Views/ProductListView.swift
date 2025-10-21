@@ -59,6 +59,22 @@ struct ProductListView: View {
                     Text("error")
                     // TODO: Error Message
                 }
+                
+                Spacer()
+                
+                // Payment Section
+                PaymentSectionView(
+                    totalAmount: 25,
+                    selectedCustomerType: viewModel.selectedCustomerType ?? CustomerType(key: "retail", name: "Retail", isDefault: true),
+                    customerTypes: viewModel.customerTypes,
+                    onCustomerTypeChange: { customerType in
+                        viewModel.selectCustomerType(customerType)
+                    },
+                    onPayButtonTapped: {
+                        print("pay")
+                        // TODO: Handle payment
+                    }
+                )
             }
             .task {
                 await viewModel.loadInitialData()

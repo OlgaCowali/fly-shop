@@ -105,4 +105,25 @@ enum ProductListConstants {
     
     // Icons
     static let filterDropdownIcon: String = "arrowtriangle.down.fill"
+    
+    // MARK: - Payment Section
+    
+    // Layout
+    static let paymentCornerRadius: CGFloat = 30
+    static let paymentButtonHeight: CGFloat = 60
+    static let paymentPayButtonWidthRatio: CGFloat = 2/3
+    static let paymentCustomerTypeButtonWidthRatio: CGFloat = 1/3
+    static let paymentVerticalSpacing: CGFloat = 12
+    static let paymentHorizontalPadding: CGFloat = 16
+    static let paymentTopPadding: CGFloat = 20
+    static let paymentBottomPadding: CGFloat = 20
+    
+    // Colors
+    static let paymentPayButtonBackground: Color = .blue
+    static let paymentCustomerTypeButtonBackground: Color = Color(red: 0.29, green: 0.33, blue: 0.38)
+    static let paymentTextColor: Color = .white
+    
+    // Text
+    static let paymentActionSheetTitle: String = "Select Customer Type"
+    static let paymentActionSheetCancel: String = "Cancel"
 }
