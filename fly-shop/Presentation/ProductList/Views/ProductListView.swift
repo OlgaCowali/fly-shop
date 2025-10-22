@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ProductListView: View {
     @StateObject private var viewModel: ProductListViewModel
+    // Grid layout configuration for the product cards
     private let columns: [GridItem] = ProductListConstants.gridColumns
     
     init(viewModel: ProductListViewModel) {
@@ -38,53 +39,62 @@ struct ProductListView: View {
                 }
                 .padding(.horizontal, ProductListConstants.contentPadding)
                 
-                // Product List
+                // Product List - displays different states based on data loading
                 switch viewModel.state {
                 case .loading:
+                    // Show loading indicator while fetching data
                     ProgressView(ProductListConstants.loadingText)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 case .loaded:
+                    // Display products in a grid layout
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: ProductListConstants.gridSpacing) {
-                            ForEach(viewModel.products.indices, id: \.self) { index in
+                            ForEach(viewModel.displayedProducts) { product in
                                 ProductCardView(
-                                    product: viewModel.products[index],
-                                    quantity: $viewModel.products[index].quantity
+                                    product: product,
+                                    selectedCurrency: viewModel.selectedCurrency,
+                                    onQuantityChange: { productId, quantity in
+                                        viewModel.updateProductQuantity(productId, quantity: quantity)
+                                    }
                                 )
                             }
                         }
                         .padding(ProductListConstants.contentPadding)
                     }
                 case .error:
+                    // Show error state (placeholder for now)
                     Text("error")
                     // TODO: Error Message
                 }
                 
                 Spacer()
                 
-                // Payment Section
-                PaymentSectionView(
-                    totalAmount: 25,
-                    selectedCustomerType: viewModel.selectedCustomerType ?? CustomerType(key: "retail", name: "Retail", isDefault: true),
-                    customerTypes: viewModel.customerTypes,
-                    onCustomerTypeChange: { customerType in
-                        viewModel.selectCustomerType(customerType)
-                    },
-                    onPayButtonTapped: {
-                        print("pay")
-                        // TODO: Handle payment
-                    }
-                )
+                // Payment section - only shown when data is loaded and customer type is selected
+                if case .loaded = viewModel.state,
+                   let customerType = viewModel.selectedCustomerType {
+                    PaymentSectionView(
+                        totalAmount: viewModel.totalAmount,
+                        selectedCurrency: viewModel.selectedCurrency,
+                        totalsByCurrency: viewModel.totalsByCurrency,
+                        selectedCustomerType: customerType,
+                        customerTypes: viewModel.customerTypes,
+                        onCustomerTypeChange: { customerType in
+                            viewModel.selectCustomerType(customerType)
+                        },
+                        onPayButtonTapped: {
+                            print("pay")
+                            // TODO: Handle payment
+                        },
+                        onCurrencyChange: { currency in
+                            viewModel.selectCurrency(currency)
+                        }
+                    )
+                }
             }
             .task {
+                // Load initial data when the view appears
                 await viewModel.loadInitialData()
             }
         }
     }
 }
-
-
-
-
-                                
-                          

@@ -51,6 +51,7 @@ enum ProductListConstants {
     static let quantityMinusButtonBackground: Color = .red
     static let quantityPlusButtonBackground: Color = .blue
     static let quantityBarFrameWidth: CGFloat = 60
+    static let maxProductQuantity: Int = 10
 
     // Bottom bar
     static let bottomBarSpacing: CGFloat = 12
@@ -126,4 +127,6 @@ enum ProductListConstants {
     // Text
     static let paymentActionSheetTitle: String = "Select Customer Type"
     static let paymentActionSheetCancel: String = "Cancel"
+    static let currencyDivider: String = "|"
+    static let payButtonTitle: String = "PAY"
 }
