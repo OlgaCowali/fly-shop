@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Product: Identifiable, Codable {
+struct Product: Identifiable, Codable, Equatable {
     let id: UUID
     let name: String
     let prices: [Currency: Decimal] // ["USD": 29.99, "EUR": 27.99, "GBP": 24.99]
