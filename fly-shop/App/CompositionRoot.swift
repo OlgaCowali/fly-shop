@@ -18,6 +18,18 @@ final class CompositionRoot: ObservableObject {
         viewModelFactory.makeProductListViewModel()
     }
     
+    // Creates and returns a configured CartViewViewModel with session service
+    @MainActor func makeCartViewViewModel(selectedCurrency: Currency) -> CartViewViewModel {
+        viewModelFactory.makeCartViewViewModel(
+            selectedCurrency: selectedCurrency
+        )
+    }
+    
+    // MARK: - Services
+    
+    // Singleton service for managing cart session state
+    @MainActor private lazy var cartSessionService: CartSessionService = CartSessionServiceImpl()
+    
     // MARK: - Factories
     
     // Factory for creating infrastructure components (HTTP client, etc.)
@@ -33,5 +45,5 @@ final class CompositionRoot: ObservableObject {
     private lazy var useCaseFactory = UseCaseFactory(repositories: repositoryFactory.makeProductListRepositories())
     
     // Factory for creating view model implementations
-    private lazy var viewModelFactory = ViewModelFactory(useCases: useCaseFactory.makeProductListUseCases())
+    @MainActor private lazy var viewModelFactory = ViewModelFactory(useCases: useCaseFactory.makeProductListUseCases(), cartService: cartSessionService)
 }
