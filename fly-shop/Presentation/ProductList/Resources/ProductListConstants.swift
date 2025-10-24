@@ -70,7 +70,6 @@ enum ProductListConstants {
     static let priceBadgeVerticalPadding: CGFloat = 6
     static let priceBadgeBackground: Color = Color.black.opacity(0.8)
     static let priceBadgeCornerRadius: CGFloat = 8
-    static let priceCurrencySuffix: String = " $"
 
     // Gradient overlay
     static let gradientTopOpacity: CGFloat = 0.6
@@ -129,4 +128,9 @@ enum ProductListConstants {
     static let paymentActionSheetCancel: String = "Cancel"
     static let currencyDivider: String = "|"
     static let payButtonTitle: String = "PAY"
+    
+    // MARK: - CartEmptyStateView
+    
+    // Text
+    static let emptyListMessage: String = "No products available"
 }

@@ -7,15 +7,10 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 final class ProductListViewModel: ObservableObject {
-    // MARK: - View State
-    enum ViewState: Equatable {
-        case loading
-        case loaded
-        case error(DomainError)
-    }
     // MARK: - Published Properties
     @Published var displayedProducts: [Product] = []
     @Published private(set) var categories: [Category] = []
@@ -23,8 +18,12 @@ final class ProductListViewModel: ObservableObject {
     @Published private(set) var selectedCategory: Category?
     @Published private(set) var selectedCustomerType: CustomerType?
     @Published private(set) var selectedCurrency: Currency = .usd
-    @Published private(set) var state: ViewState = .loading
     @Published private(set) var totalsByCurrency: [Currency: Decimal] = [:] // Cart totals calculated for each currency
+    @ObservedObject private(set) var stateService: ProductListStateService
+    
+    var state: ViewState {
+        stateService.state
+    }
     
     // Returns the total amount for the currently selected currency
     var totalAmount: Decimal {
@@ -35,21 +34,30 @@ final class ProductListViewModel: ObservableObject {
     private let getProductListUseCase: GetProductList // Use case for fetching products
     private let getCategoriesUseCase: GetCategories // Use case for fetching categories
     private let getCustomerTypesUseCase: GetCustomerTypes // Use case for fetching customer types
+    private let cartService: CartSessionService // Cart session service for managing cart state
     
-    private var storedProducts: [Product] = [] // Store all products with their quantities (unfiltered)
+    private var catalogProducts: [Product] = []
     
     // MARK: - Task Management
     private var loadTask: Task<Void, Never>? // Current loading task for cancellation support
+    private var cancellables = Set<AnyCancellable>() // Store Combine subscriptions
     
     // MARK: - Initialization
     init(
         getProductListUseCase: GetProductList,
         getCategoriesUseCase: GetCategories,
-        getCustomerTypesUseCase: GetCustomerTypes
+        getCustomerTypesUseCase: GetCustomerTypes,
+        cartService: CartSessionService,
+        stateManager: ProductListStateService = ProductListStateService()
     ) {
         self.getProductListUseCase = getProductListUseCase
         self.getCategoriesUseCase = getCategoriesUseCase
         self.getCustomerTypesUseCase = getCustomerTypesUseCase
+        self.cartService = cartService
+        self.stateService = stateManager
+        
+        // Observe cart service changes to sync product quantities
+        setupCartServiceObservation()
     }
     
     deinit {
@@ -61,7 +69,7 @@ final class ProductListViewModel: ObservableObject {
     // Loads initial data including customer types, categories, and products
     func loadInitialData() async {
         cancelLoad()
-        state = .loading
+        stateService.setLoading()
         
         // Load customer types and categories concurrently
         async let customerTypesResult = getCustomerTypesUseCase.execute()
@@ -78,19 +86,23 @@ final class ProductListViewModel: ObservableObject {
     // Loads products for the currently selected customer type
     func loadProducts() async {
         guard let customerType = selectedCustomerType else { return }
-        state = .loading
+        stateService.setLoading()
         let result = await getProductListUseCase.execute(
             for: customerType,
             filteredBy: nil // Always load all products for the customer type
         )
         switch result {
         case .success(let products):
-            self.storedProducts = products
-            filterProducts() // Apply current category filter
-            calculateTotals() // Recalculate cart totals
-            self.state = .loaded
+            // Store catalog WITHOUT quantities - they'll come from cart
+            self.catalogProducts = products.map { product in
+                var p = product
+                p.quantity = 0 // Reset quantities - they'll come from cart
+                return p
+            }
+            syncWithCart() // Merge with cart quantities and update display
+            stateService.setLoaded()
         case .failure(let error):
-            self.state = .error(error)
+            stateService.setError(error)
         }
     }
     
@@ -111,20 +123,23 @@ final class ProductListViewModel: ObservableObject {
         selectedCurrency = currency
     }
     
-    // Updates product quantity in cart and recalculates totals
+     // Updates product quantity in cart
     func updateProductQuantity(_ productId: UUID, quantity: Int) {
         // Apply business rules: enforce minimum (0) and maximum (10) quantity limits
         let limitedQuantity = min(ProductListConstants.maxProductQuantity, max(0, quantity))
         
-        // Update in both stored and displayed products using CartCalculator
-        if CartCalculator.updateProductQuantityInBothArrays(
-            storedProducts: &storedProducts,
-            displayedProducts: &displayedProducts,
-            productId: productId,
-            quantity: limitedQuantity
-        ) {
-            // Recalculate totals after quantity change
-            calculateTotals()
+        // Find the product to update
+        guard let product = catalogProducts.first(where: { $0.id == productId }) else { return }
+        
+        // Create updated product with new quantity
+        var updatedProduct = product
+        updatedProduct.quantity = limitedQuantity
+        
+        // Update cart service
+        if limitedQuantity > 0 {
+            cartService.addProduct(updatedProduct)
+        } else {
+            cartService.removeProduct(productId: productId)
         }
     }
     
@@ -141,7 +156,7 @@ final class ProductListViewModel: ObservableObject {
             }
             return true
         case .failure(let error):
-            self.state = .error(error)
+            stateService.setError(error)
             return false
         }
     }
@@ -153,7 +168,7 @@ final class ProductListViewModel: ObservableObject {
             self.categories = categories
             return true
         case .failure(let error):
-            self.state = .error(error)
+            stateService.setError(error)
             return false
         }
     }
@@ -177,20 +192,54 @@ final class ProductListViewModel: ObservableObject {
         loadTask = nil
     }
     
-    // Filters displayed products based on selected category
+    // Filters displayed products based on selected category and merges with cart quantities
     private func filterProducts() {
         guard let category = selectedCategory else {
             // Show all products when no category is selected
-            displayedProducts = storedProducts
+            displayedProducts = mergeWithCartQuantities(catalogProducts)
+            stateService.updateState(products: displayedProducts)
             return
         }
         
         // Filter by selected category
-        displayedProducts = storedProducts.filter { $0.category == category }
+        let filtered = catalogProducts.filter { $0.category == category }
+        displayedProducts = mergeWithCartQuantities(filtered)
+        stateService.updateState(products: displayedProducts)
     }
     
-    // Calculates cart totals for all supported currencies
+    // Merges catalog products with cart quantities
+    private func mergeWithCartQuantities(_ products: [Product]) -> [Product] {
+        let cartQuantities = Dictionary(
+            uniqueKeysWithValues: cartService.selectedProducts.map { ($0.id, $0.quantity) }
+        )
+        
+        return products.map { product in
+            var p = product
+            p.quantity = cartQuantities[product.id] ?? 0
+            return p
+        }
+    }
+    
+    // Calculates cart totals for all supported currencies from cart service
     private func calculateTotals() {
-        self.totalsByCurrency = CartCalculator.calculateTotals(for: storedProducts, currencies: Currency.all)
+        self.totalsByCurrency = CartCalculator.calculateTotals(for: cartService.selectedProducts, currencies: Currency.all)
+    }
+    
+    // Sets up observation of cart service changes to sync display with cart
+    private func setupCartServiceObservation() {
+        // Observe changes to the cart service using the protocol publisher
+        cartService.selectedProductsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                // When cart changes (from any source), refresh display
+                self?.syncWithCart()
+            }
+            .store(in: &cancellables)
+    }
+    
+    // Syncs displayed products and totals with cart service
+    private func syncWithCart() {
+        filterProducts() // Re-filter with updated quantities from cart
+        calculateTotals() // Recalculate totals from cart
     }
 }

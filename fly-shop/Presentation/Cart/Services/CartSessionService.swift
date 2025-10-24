@@ -7,11 +7,13 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 // Protocol defining cart session management operations
 @MainActor
-protocol CartSessionService {
+protocol CartSessionService: AnyObject {
     var selectedProducts: [Product] { get }
+    var selectedProductsPublisher: AnyPublisher<[Product], Never> { get }
     var selectedSeat: String { get set }
     
     func addProduct(_ product: Product)

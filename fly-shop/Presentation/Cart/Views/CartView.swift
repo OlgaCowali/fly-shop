@@ -49,14 +49,14 @@ struct CartView: View {
         .overlay(
             // Cash Payment Modal
             Group {
-                if viewModel.showCashPaymentView {
-                    CashPaymentView(
-                        isPresented: $viewModel.showCashPaymentView,
-                        totalAmount: viewModel.totalAmount,
-                        currency: viewModel.selectedCurrency
-                    )
-                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
-                }
+//                if viewModel.showCashPaymentView {
+//                    CashPaymentView(
+//                        isPresented: $viewModel.showCashPaymentView,
+//                        totalAmount: viewModel.totalAmount,
+//                        currency: viewModel.selectedCurrency
+//                    )
+//                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
+//                }
             }
         )
         .animation(.easeInOut(duration: 0.3), value: viewModel.showCashPaymentView)

@@ -10,11 +10,19 @@ import SwiftUI
 
 struct ProductListView: View {
     @StateObject private var viewModel: ProductListViewModel
+    @State private var showingCart = false
     // Grid layout configuration for the product cards
     private let columns: [GridItem] = ProductListConstants.gridColumns
     
-    init(viewModel: ProductListViewModel) {
+    // Factory closure for creating cart view model
+    private let makeCartViewModel: (Currency) -> CartViewViewModel
+    
+    init(
+        viewModel: ProductListViewModel,
+        makeCartViewModel: @escaping (Currency) -> CartViewViewModel
+    ) {
         self._viewModel = StateObject(wrappedValue: viewModel)
+        self.makeCartViewModel = makeCartViewModel
     }
     
     var body: some View {
@@ -42,9 +50,15 @@ struct ProductListView: View {
                 // Product List - displays different states based on data loading
                 switch viewModel.state {
                 case .loading:
-                    // Show loading indicator while fetching data
-                    ProgressView(ProductListConstants.loadingText)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    LoadingStateView(
+                        loadingText: ProductListConstants.loadingText,
+                        spacing: CommonConstants.loadingStateSpacing,
+                        padding: CommonConstants.loadingStatePadding,
+                        indicatorColor: CommonConstants.loadingIndicatorColor,
+                        indicatorScale: CommonConstants.loadingIndicatorScale,
+                        textFont: CommonConstants.loadingTextFont,
+                        textColor: CommonConstants.loadingTextColor
+                    )
                 case .loaded:
                     // Display products in a grid layout
                     ScrollView {
@@ -61,10 +75,21 @@ struct ProductListView: View {
                         }
                         .padding(ProductListConstants.contentPadding)
                     }
-                case .error:
-                    // Show error state (placeholder for now)
-                    Text("error")
-                    // TODO: Error Message
+                case .error(let error):
+                    // Show common error state
+                    ErrorStateView(
+                        error: error,
+                        onRetry: {
+                            Task {
+                                await viewModel.loadInitialData()
+                            }
+                        }
+                    )
+                case .empty:
+                    EmptyStateView(
+                        message: ProductListConstants.emptyListMessage,
+                        font: CommonConstants.emptyScreenFont
+                    )
                 }
                 
                 Spacer()
@@ -82,8 +107,7 @@ struct ProductListView: View {
                             viewModel.selectCustomerType(customerType)
                         },
                         onPayButtonTapped: {
-                            print("pay")
-                            // TODO: Handle payment
+                            showingCart = true
                         },
                         onCurrencyChange: { currency in
                             viewModel.selectCurrency(currency)
@@ -94,6 +118,13 @@ struct ProductListView: View {
             .task {
                 // Load initial data when the view appears
                 await viewModel.loadInitialData()
+            }
+            .fullScreenCover(isPresented: $showingCart) {
+                CartView(
+                    viewModel: makeCartViewModel(
+                        viewModel.selectedCurrency
+                    )
+                )
             }
         }
     }

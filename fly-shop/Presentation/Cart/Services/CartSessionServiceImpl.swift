@@ -13,6 +13,10 @@ final class CartSessionServiceImpl: CartSessionService, ObservableObject {
     @Published private(set) var selectedProducts: [Product] = []
     @Published var selectedSeat: String
     
+    var selectedProductsPublisher: AnyPublisher<[Product], Never> {
+        $selectedProducts.eraseToAnyPublisher()
+    }
+    
     init(defaultSeat: String = "A 1") {
         self.selectedSeat = defaultSeat
     }

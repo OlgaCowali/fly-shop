@@ -102,15 +102,13 @@ final class CartViewViewModel: ObservableObject {
     // MARK: - Private Methods
     
     private func setupSessionServiceObservation() {
-        // Observe changes to the session service to trigger UI updates
-        if let observableSessionService = sessionService as? CartSessionServiceImpl {
-            observableSessionService.$selectedProducts
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] _ in
-                    self?.updateState()
-                }
-                .store(in: &cancellables)
-        }
+        // Observe changes to the session service to trigger UI updates using the protocol publisher
+        sessionService.selectedProductsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updateState()
+            }
+            .store(in: &cancellables)
     }
     
     // Updates the view state based on current cart content
