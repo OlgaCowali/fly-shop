@@ -52,4 +52,9 @@ final class CartSessionServiceImpl: CartSessionService, ObservableObject {
     func updateSeat(_ seat: String) {
         selectedSeat = seat
     }
+    
+    // Clears all products from the cart
+    func clearCart() {
+        selectedProducts.removeAll()
+    }
 }

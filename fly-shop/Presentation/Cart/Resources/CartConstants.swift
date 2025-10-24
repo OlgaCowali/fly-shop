@@ -182,6 +182,8 @@ enum CartConstants {
     static let changeLabel: String = "Change:"
     static let cancelButtonText: String = "Cancel"
     static let confirmPaymentButtonText: String = "Confirm Payment"
+    static let defaultAmountPlaceholder: String = "0.00"
+    static let defaultAmountValue: String = "0.00"
     
     // Layout
     static let cashPaymentModalSpacing: CGFloat = 24
@@ -209,4 +211,36 @@ enum CartConstants {
     static let cashPaymentConfirmButtonDisabledBackground = Color.gray
     static let cashPaymentChangePositiveColor = Color.green
     static let cashPaymentChangeNegativeColor = Color.red
+    
+    // MARK: - CashPaymentViewModel Error Messages
+    
+    // Error messages
+    static let invalidPaymentAmountMessage: String = "Invalid payment amount"
+    static let invalidAmountFormatMessage: String = "Invalid amount format"
+    static let paymentProcessingFailedMessage: String = "Payment processing failed:"
+    
+    // MARK: - CashPaymentService Constants
+    
+    // Processing
+    static let paymentProcessingDelayNanoseconds: UInt64 = 1_000_000_000 // 1 second
+    
+    // Messages
+    static let insufficientPaymentAmountMessage: String = "Insufficient payment amount"
+    static let paymentProcessedSuccessfullyMessage: String = "Payment processed successfully"
+    
+    // MARK: - CashPaymentView Constants
+    
+    // Background overlay
+    static let cashPaymentBackgroundOverlayOpacity: Double = 0.4
+    
+    // Shadow
+    static let cashPaymentModalShadowRadius: CGFloat = 20
+    static let cashPaymentModalShadowOffsetX: CGFloat = 0
+    static let cashPaymentModalShadowOffsetY: CGFloat = 10
+    
+    // Progress view
+    static let cashPaymentProgressViewScale: CGFloat = 0.8
+    
+    // Error message
+    static let cashPaymentErrorMessageHorizontalPadding: CGFloat = 16
 }

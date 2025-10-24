@@ -20,4 +20,5 @@ protocol CartSessionService: AnyObject {
     func removeProduct(productId: UUID)
     func updateProductQuantity(_ productId: UUID, quantity: Int)
     func updateSeat(_ seat: String)
+    func clearCart()
 }

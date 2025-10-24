@@ -23,8 +23,12 @@ final class CartViewViewModel: ObservableObject {
     
     // MARK: - Dependencies
     private let sessionService: CartSessionService
+    private let paymentService: CashPaymentService
     private let stateService: CartStateService
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Cash Payment ViewModel
+    @Published private(set) var cashPaymentViewModel: CashPaymentViewModel?
     
     // MARK: - Computed Properties
     
@@ -54,10 +58,12 @@ final class CartViewViewModel: ObservableObject {
     init(
         selectedCurrency: Currency,
         sessionService: CartSessionService,
+        paymentService: CashPaymentService,
         stateManager: CartStateService? = nil
     ) {
         self.selectedCurrency = selectedCurrency
         self.sessionService = sessionService
+        self.paymentService = paymentService
         self.stateService = stateManager ?? CartStateService()
         self.selectedSeat = sessionService.selectedSeat
         
@@ -91,12 +97,31 @@ final class CartViewViewModel: ObservableObject {
     
     // Shows the cash payment view
     func showCashPayment() {
+        cashPaymentViewModel = CashPaymentViewModel(
+            paymentService: paymentService,
+            totalAmount: totalAmount,
+            currency: selectedCurrency
+        )
         showCashPaymentView = true
     }
     
     // Hides the cash payment view
     func hideCashPayment() {
         showCashPaymentView = false
+        cashPaymentViewModel = nil
+    }
+    
+    // Handles successful payment completion
+    func handlePaymentSuccess() {
+        // Clear the cart
+        sessionService.clearCart()
+        // Dismiss the cart view
+        dismiss()
+    }
+    
+    // Returns the payment service for use in CashPaymentView
+    func getPaymentService() -> CashPaymentService {
+        return paymentService
     }
     
     // MARK: - Private Methods

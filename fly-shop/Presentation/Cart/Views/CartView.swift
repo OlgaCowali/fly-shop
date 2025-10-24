@@ -49,17 +49,20 @@ struct CartView: View {
         .overlay(
             // Cash Payment Modal
             Group {
-//                if viewModel.showCashPaymentView {
-//                    CashPaymentView(
-//                        isPresented: $viewModel.showCashPaymentView,
-//                        totalAmount: viewModel.totalAmount,
-//                        currency: viewModel.selectedCurrency
-//                    )
-//                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
-//                }
+                if viewModel.showCashPaymentView,
+                   let cashPaymentViewModel = viewModel.cashPaymentViewModel {
+                    CashPaymentView(
+                        isPresented: $viewModel.showCashPaymentView,
+                        onPaymentSuccess: {
+                            viewModel.handlePaymentSuccess()
+                        },
+                        viewModel: cashPaymentViewModel
+                    )
+                    .transition(.opacity.combined(with: .scale(scale: CartConstants.cashPaymentModalScale)))
+                }
             }
         )
-        .animation(.easeInOut(duration: 0.3), value: viewModel.showCashPaymentView)
+        .animation(.easeInOut(duration: CartConstants.cashPaymentModalAnimationDuration), value: viewModel.showCashPaymentView)
     }
     
     // MARK: - Private Views

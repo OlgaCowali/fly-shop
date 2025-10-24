@@ -25,10 +25,32 @@ final class CompositionRoot: ObservableObject {
         )
     }
     
+    // Creates and returns a configured CashPaymentViewModel with payment service
+    @MainActor func makeCashPaymentViewModel(
+        totalAmount: Decimal,
+        currency: Currency
+    ) -> CashPaymentViewModel {
+        viewModelFactory.makeCashPaymentViewModel(
+            totalAmount: totalAmount,
+            currency: currency,
+            paymentService: cashPaymentService
+        )
+    }
+    
+    
     // MARK: - Services
     
     // Singleton service for managing cart session state
     @MainActor private lazy var cartSessionService: CartSessionService = CartSessionServiceImpl()
+    
+    // Singleton service for handling cash payments
+    @MainActor private lazy var cashPaymentService: CashPaymentService = CashPaymentServiceImpl()
+    
+    // Container for all cart-related services
+    @MainActor private lazy var cartServices: CartServices = CartServices(
+        sessionService: cartSessionService,
+        paymentService: cashPaymentService
+    )
     
     // MARK: - Factories
     
@@ -45,5 +67,5 @@ final class CompositionRoot: ObservableObject {
     private lazy var useCaseFactory = UseCaseFactory(repositories: repositoryFactory.makeProductListRepositories())
     
     // Factory for creating view model implementations
-    @MainActor private lazy var viewModelFactory = ViewModelFactory(useCases: useCaseFactory.makeProductListUseCases(), cartService: cartSessionService)
+    @MainActor private lazy var viewModelFactory = ViewModelFactory(useCases: useCaseFactory.makeProductListUseCases(), cartServices: cartServices)
 }
