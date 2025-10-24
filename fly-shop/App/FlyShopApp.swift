@@ -15,7 +15,12 @@ struct FlyShopApp: App {
     var body: some Scene {
         WindowGroup {
             ProductListView(
-                viewModel: compositionRoot.makeProductListViewModel()
+                viewModel: compositionRoot.makeProductListViewModel(),
+                makeCartViewModel: { currency in
+                    compositionRoot.makeCartViewViewModel(
+                        selectedCurrency: currency
+                    )
+                }
             )
         }
     }
