@@ -53,7 +53,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -80,7 +80,7 @@ struct GetProductListUseCaseTests {
         let fliesCategory = Category(name: "Flies", key: "flies")
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: fliesCategory)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: fliesCategory)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -106,7 +106,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -128,7 +128,7 @@ struct GetProductListUseCaseTests {
         let nonMatchingCategory = Category(name: "Lines", key: "lines")
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nonMatchingCategory)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nonMatchingCategory)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -151,7 +151,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -172,7 +172,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -193,7 +193,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -214,7 +214,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -235,7 +235,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -256,7 +256,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 1)
@@ -279,9 +279,9 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        _ = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
-        _ = try await useCase.execute(for: sampleCustomerType, filteredBy: sampleCategory)
-        _ = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        _ = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        _ = await useCase.execute(for: sampleCustomerType, filteredBy: sampleCategory)
+        _ = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         #expect(mockRepository.getProductsCallCount == 3)
@@ -297,7 +297,7 @@ struct GetProductListUseCaseTests {
         let category = Category(name: "Rods", key: "rods")
         
         // When
-        _ = try await useCase.execute(for: customerType, filteredBy: category)
+        _ = await useCase.execute(for: customerType, filteredBy: category)
         
         // Then
         #expect(mockRepository.lastCustomerType == customerType)
@@ -335,7 +335,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         switch result {
@@ -365,7 +365,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: nil)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: nil)
         
         // Then
         switch result {
@@ -418,7 +418,7 @@ struct GetProductListUseCaseTests {
         let useCase = GetProductListUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute(for: sampleCustomerType, filteredBy: fliesCategory)
+        let result = await useCase.execute(for: sampleCustomerType, filteredBy: fliesCategory)
         
         // Then
         switch result {

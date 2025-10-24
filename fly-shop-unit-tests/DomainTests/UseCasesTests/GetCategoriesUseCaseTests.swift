@@ -30,7 +30,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 1)
@@ -55,7 +55,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 1)
@@ -78,7 +78,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 1)
@@ -99,7 +99,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 1)
@@ -120,7 +120,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 1)
@@ -141,7 +141,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 1)
@@ -162,7 +162,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 1)
@@ -183,7 +183,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 1)
@@ -206,9 +206,9 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        _ = try await useCase.execute()
-        _ = try await useCase.execute()
-        _ = try await useCase.execute()
+        _ =  await useCase.execute()
+        _ =  await useCase.execute()
+        _ =  await useCase.execute()
         
         // Then
         #expect(mockRepository.getCategoriesCallCount == 3)
@@ -227,7 +227,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result =  await useCase.execute()
         
         // Then
         switch result {
@@ -252,7 +252,7 @@ struct GetCategoriesUseCaseTests {
         let useCase = GetCategoriesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result =  await useCase.execute()
         
         // Then
         switch result {

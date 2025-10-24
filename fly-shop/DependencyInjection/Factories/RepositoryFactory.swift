@@ -8,12 +8,12 @@
 import Foundation
 
 // Factory responsible for creating repository implementations that bridge domain and data layers
-final class RepositoryFactory {
+class RepositoryFactory {
     
     private let dataSources: ProductListDataSources
-    private let dataSourceFactory: DataSourceFactory
+    private let dataSourceFactory: DataSourceFactoryProtocol
     
-    init(dataSources: ProductListDataSources, dataSourceFactory: DataSourceFactory) {
+    init(dataSources: ProductListDataSources, dataSourceFactory: DataSourceFactoryProtocol) {
         self.dataSources = dataSources
         self.dataSourceFactory = dataSourceFactory
     }

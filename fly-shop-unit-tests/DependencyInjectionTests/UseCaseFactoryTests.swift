@@ -17,7 +17,8 @@ struct UseCaseFactoryTests {
     func testMakeGetCustomerTypesUseCase() {
         // Given
         let mockRepositories = createMockRepositories()
-        let factory = UseCaseFactory(repositories: mockRepositories)
+        let mockRepositoryFactory = createMockRepositoryFactory()
+        let factory = UseCaseFactory(repositories: mockRepositories, repositoryFactory: mockRepositoryFactory)
         
         // When
         let useCases = factory.makeProductListUseCases()
@@ -30,7 +31,8 @@ struct UseCaseFactoryTests {
     func testMakeGetCategoriesUseCase() {
         // Given
         let mockRepositories = createMockRepositories()
-        let factory = UseCaseFactory(repositories: mockRepositories)
+        let mockRepositoryFactory = createMockRepositoryFactory()
+        let factory = UseCaseFactory(repositories: mockRepositories, repositoryFactory: mockRepositoryFactory)
         
         // When
         let useCases = factory.makeProductListUseCases()
@@ -43,7 +45,8 @@ struct UseCaseFactoryTests {
     func testMakeGetProductListUseCase() {
         // Given
         let mockRepositories = createMockRepositories()
-        let factory = UseCaseFactory(repositories: mockRepositories)
+        let mockRepositoryFactory = createMockRepositoryFactory()
+        let factory = UseCaseFactory(repositories: mockRepositories, repositoryFactory: mockRepositoryFactory)
         
         // When
         let useCases = factory.makeProductListUseCases()
@@ -56,7 +59,8 @@ struct UseCaseFactoryTests {
     func testMakeProductListUseCases() {
         // Given
         let mockRepositories = createMockRepositories()
-        let factory = UseCaseFactory(repositories: mockRepositories)
+        let mockRepositoryFactory = createMockRepositoryFactory()
+        let factory = UseCaseFactory(repositories: mockRepositories, repositoryFactory: mockRepositoryFactory)
         
         // When
         let useCases = factory.makeProductListUseCases()
@@ -73,7 +77,8 @@ struct UseCaseFactoryTests {
     func testConsistentUseCaseCreation() {
         // Given
         let mockRepositories = createMockRepositories()
-        let factory = UseCaseFactory(repositories: mockRepositories)
+        let mockRepositoryFactory = createMockRepositoryFactory()
+        let factory = UseCaseFactory(repositories: mockRepositories, repositoryFactory: mockRepositoryFactory)
         
         // When
         let firstCall = factory.makeProductListUseCases()
@@ -95,8 +100,10 @@ struct UseCaseFactoryTests {
         // Given
         let mockRepositories1 = createMockRepositories()
         let mockRepositories2 = createMockRepositories()
-        let factory1 = UseCaseFactory(repositories: mockRepositories1)
-        let factory2 = UseCaseFactory(repositories: mockRepositories2)
+        let mockRepositoryFactory1 = createMockRepositoryFactory()
+        let mockRepositoryFactory2 = createMockRepositoryFactory()
+        let factory1 = UseCaseFactory(repositories: mockRepositories1, repositoryFactory: mockRepositoryFactory1)
+        let factory2 = UseCaseFactory(repositories: mockRepositories2, repositoryFactory: mockRepositoryFactory2)
         
         // When
         let useCases1 = factory1.makeProductListUseCases()
@@ -111,6 +118,20 @@ struct UseCaseFactoryTests {
         #expect(useCases2.getProductList is GetProductListUseCase)
     }
     
+    @Test("Should create process payment use case")
+    func testMakeProcessPaymentUseCase() {
+        // Given
+        let mockRepositories = createMockRepositories()
+        let mockRepositoryFactory = createMockRepositoryFactory()
+        let factory = UseCaseFactory(repositories: mockRepositories, repositoryFactory: mockRepositoryFactory)
+        
+        // When
+        let useCase = factory.makeProcessPaymentUseCase()
+        
+        // Then
+        #expect(useCase is ProcessPaymentUseCase)
+    }
+    
     // MARK: - Helper Methods
     
     private func createMockRepositories() -> ProductListRepositories {
@@ -119,5 +140,9 @@ struct UseCaseFactoryTests {
             category: MockCategoryRepository(),
             product: MockProductListRepository()
         )
+    }
+    
+    private func createMockRepositoryFactory() -> MockRepositoryFactory {
+        return MockRepositoryFactory()
     }
 }

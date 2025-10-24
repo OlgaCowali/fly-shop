@@ -7,23 +7,6 @@
 
 import Foundation
 
-// MARK: - Payment Result
-
-struct PaymentResult {
-    let isSuccess: Bool
-    let changeAmount: Decimal
-    let message: String?
-    let error: Error?
-    
-    static func success(changeAmount: Decimal, message: String? = nil) -> PaymentResult {
-        PaymentResult(isSuccess: true, changeAmount: changeAmount, message: message, error: nil)
-    }
-    
-    static func failure(error: Error, message: String? = nil) -> PaymentResult {
-        PaymentResult(isSuccess: false, changeAmount: 0, message: message, error: error)
-    }
-}
-
 // MARK: - Cash Payment Service Protocol
 
 protocol CashPaymentService {

@@ -43,15 +43,5 @@ struct ExpirationDate: Equatable {
         self.month = month
         self.year = year
     }
-    
-    // Checks if the expiration date is still valid (not expired)
-    func isValid() -> Bool {
-        let currentDate = Date()
-        let calendar = Calendar.current
-        let currentYear = calendar.component(.year, from: currentDate) % 100
-        let currentMonth = calendar.component(.month, from: currentDate)
-        
-        return year > currentYear || (year == currentYear && month >= currentMonth)
-    }
 }
 

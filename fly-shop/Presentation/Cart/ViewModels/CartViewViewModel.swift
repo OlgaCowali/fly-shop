@@ -28,7 +28,7 @@ final class CartViewViewModel: ObservableObject {
     private let sessionService: CartSessionService
     private let paymentService: CashPaymentService
     private let cardPaymentService: CardPaymentService
-    private let stateService: CartStateService
+    private let stateService: CartStateServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Payment ViewModels
@@ -65,7 +65,7 @@ final class CartViewViewModel: ObservableObject {
         sessionService: CartSessionService,
         paymentService: CashPaymentService,
         cardPaymentService: CardPaymentService,
-        stateManager: CartStateService? = nil
+        stateManager: CartStateServiceProtocol? = nil
     ) {
         self.selectedCurrency = selectedCurrency
         self.sessionService = sessionService

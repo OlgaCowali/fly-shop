@@ -17,8 +17,8 @@ struct ViewModelFactoryTests {
     func testMakeProductListViewModel() {
         // Given
         let mockUseCases = createMockUseCases()
-        let mockSessionService = MockCartSessionService()
-        let factory = ViewModelFactory(useCases: mockUseCases, cartService: mockSessionService)
+        let mockCartServices = createMockCartServices()
+        let factory = ViewModelFactory(useCases: mockUseCases, cartServices: mockCartServices)
         
         // When
         let viewModel = factory.makeProductListViewModel()
@@ -35,8 +35,8 @@ struct ViewModelFactoryTests {
     func testConsistentViewModelCreation() {
         // Given
         let mockUseCases = createMockUseCases()
-        let mockSessionService = MockCartSessionService()
-        let factory = ViewModelFactory(useCases: mockUseCases, cartService: mockSessionService)
+        let mockCartServices = createMockCartServices()
+        let factory = ViewModelFactory(useCases: mockUseCases, cartServices: mockCartServices)
         
         // When
         let firstViewModel = factory.makeProductListViewModel()
@@ -53,10 +53,10 @@ struct ViewModelFactoryTests {
         // Given
         let mockUseCases1 = createMockUseCases()
         let mockUseCases2 = createMockUseCases()
-        let mockSessionService1 = MockCartSessionService()
-        let mockSessionService2 = MockCartSessionService()
-        let factory1 = ViewModelFactory(useCases: mockUseCases1, cartService: mockSessionService1)
-        let factory2 = ViewModelFactory(useCases: mockUseCases2, cartService: mockSessionService2)
+        let mockCartServices1 = createMockCartServices()
+        let mockCartServices2 = createMockCartServices()
+        let factory1 = ViewModelFactory(useCases: mockUseCases1, cartServices: mockCartServices1)
+        let factory2 = ViewModelFactory(useCases: mockUseCases2, cartServices: mockCartServices2)
         
         // When
         let viewModel1 = factory1.makeProductListViewModel()
@@ -72,8 +72,8 @@ struct ViewModelFactoryTests {
     func testMakeCartViewViewModel() {
         // Given
         let mockUseCases = createMockUseCases()
-        let mockSessionService = MockCartSessionService()
-        let factory = ViewModelFactory(useCases: mockUseCases, cartService: mockSessionService)
+        let mockCartServices = createMockCartServices()
+        let factory = ViewModelFactory(useCases: mockUseCases, cartServices: mockCartServices)
         
         // When
         let viewModel = factory.makeCartViewViewModel(selectedCurrency: .usd)
@@ -88,9 +88,9 @@ struct ViewModelFactoryTests {
     func testMakeCartViewViewModelWithCustomSeat() {
         // Given
         let mockUseCases = createMockUseCases()
-        let mockSessionService = MockCartSessionService()
-        mockSessionService.selectedSeat = "B 3"
-        let factory = ViewModelFactory(useCases: mockUseCases, cartService: mockSessionService)
+        let mockCartServices = createMockCartServices()
+        mockCartServices.sessionService.selectedSeat = "B 3"
+        let factory = ViewModelFactory(useCases: mockUseCases, cartServices: mockCartServices)
         
         // When
         let viewModel = factory.makeCartViewViewModel(selectedCurrency: .eur)
@@ -107,6 +107,15 @@ struct ViewModelFactoryTests {
             getCustomerTypes: MockGetCustomerTypesUseCase(),
             getCategories: MockGetCategoriesUseCase(),
             getProductList: MockGetProductListUseCase()
+        )
+    }
+    
+    @MainActor
+    private func createMockCartServices() -> CartServices {
+        return CartServices(
+            sessionService: MockCartSessionService(),
+            cashPaymentService: MockCashPaymentService(),
+            cardPaymentService: MockCardPaymentService()
         )
     }
     

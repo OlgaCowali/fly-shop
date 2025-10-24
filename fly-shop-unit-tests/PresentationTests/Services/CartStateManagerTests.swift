@@ -1,5 +1,5 @@
 //
-//  CartStateManagerTests.swift
+//  CartStateServiceTests.swift
 //  fly-shop-unit-tests
 //
 //  Created by Olga Covaliova on 23.10.2025.
@@ -10,7 +10,7 @@ import SwiftUI
 @testable import fly_shop
 
 @MainActor
-struct CartStateManagerTests {
+struct CartStateServiceTests {
     
     // MARK: - Test Cases
     
