@@ -35,7 +35,8 @@ final class ViewModelFactory {
         CartViewViewModel(
             selectedCurrency: selectedCurrency,
             sessionService: cartServices.sessionService,
-            paymentService: cartServices.paymentService
+            paymentService: cartServices.cashPaymentService,
+            cardPaymentService: cartServices.cardPaymentService
         )
     }
     
@@ -46,6 +47,19 @@ final class ViewModelFactory {
         paymentService: CashPaymentService
     ) -> CashPaymentViewModel {
         CashPaymentViewModel(
+            paymentService: paymentService,
+            totalAmount: totalAmount,
+            currency: currency
+        )
+    }
+    
+    // Creates a card payment view model with payment service and payment details
+    @MainActor func makeCardPaymentViewModel(
+        totalAmount: Decimal,
+        currency: Currency,
+        paymentService: CardPaymentService
+    ) -> CardPaymentViewModel {
+        CardPaymentViewModel(
             paymentService: paymentService,
             totalAmount: totalAmount,
             currency: currency

@@ -10,7 +10,25 @@ import Alamofire
 final class HTTPClient: HTTPClientProtocol {
     func makeRequest(endpoint: Endpoint) async -> Result<Data, HTTPClientError> {
         return await withCheckedContinuation { continuation in
-            AF.request(endpoint.path, interceptor: .retryPolicy)
+            // Configure the request based on the HTTP method
+            var request: DataRequest
+            
+            switch endpoint.method {
+            case .get:
+                request = AF.request(endpoint.path, interceptor: .retryPolicy)
+            case .post:
+                var urlRequest = URLRequest(url: URL(string: endpoint.path)!)
+                urlRequest.httpMethod = "POST"
+                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                
+                if let body = endpoint.body {
+                    urlRequest.httpBody = body
+                }
+                
+                request = AF.request(urlRequest, interceptor: .retryPolicy)
+            }
+            
+            request
                 .validate()
                 .responseData { response in
                     switch response.result {
@@ -36,10 +54,12 @@ final class HTTPClient: HTTPClientProtocol {
 struct Endpoint {
     let path: String
     let method: HTTPMethod
+    let body: Data?
     
-    init(method: HTTPMethod, path: String? = nil, queryParams: [String: Any]? = nil) {
+    init(method: HTTPMethod, path: String? = nil, queryParams: [String: Any]? = nil, body: Data? = nil) {
         self.path = path ?? APIConstant.baseURLString
         self.method = method
+        self.body = body
     }
 }
 

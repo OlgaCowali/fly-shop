@@ -37,6 +37,18 @@ final class CompositionRoot: ObservableObject {
         )
     }
     
+    // Creates and returns a configured CardPaymentViewModel with payment service
+    @MainActor func makeCardPaymentViewModel(
+        totalAmount: Decimal,
+        currency: Currency
+    ) -> CardPaymentViewModel {
+        viewModelFactory.makeCardPaymentViewModel(
+            totalAmount: totalAmount,
+            currency: currency,
+            paymentService: cardPaymentService
+        )
+    }
+    
     
     // MARK: - Services
     
@@ -46,10 +58,14 @@ final class CompositionRoot: ObservableObject {
     // Singleton service for handling cash payments
     @MainActor private lazy var cashPaymentService: CashPaymentService = CashPaymentServiceImpl()
     
+    // Singleton service for handling card payments
+    @MainActor private lazy var cardPaymentService: CardPaymentService = CardPaymentServiceImpl(processPaymentUseCase: useCaseFactory.makeProcessPaymentUseCase())
+    
     // Container for all cart-related services
     @MainActor private lazy var cartServices: CartServices = CartServices(
         sessionService: cartSessionService,
-        paymentService: cashPaymentService
+        cashPaymentService: cashPaymentService,
+        cardPaymentService: cardPaymentService
     )
     
     // MARK: - Factories
@@ -61,10 +77,16 @@ final class CompositionRoot: ObservableObject {
     private lazy var dataSourceFactory = DataSourceFactory(httpClient: infrastructureFactory.makeHTTPClient())
     
     // Factory for creating repository implementations
-    private lazy var repositoryFactory = RepositoryFactory(dataSources: dataSourceFactory.makeProductListDataSources())
+    private lazy var repositoryFactory = RepositoryFactory(
+        dataSources: dataSourceFactory.makeProductListDataSources(),
+        dataSourceFactory: dataSourceFactory
+    )
     
     // Factory for creating use case implementations
-    private lazy var useCaseFactory = UseCaseFactory(repositories: repositoryFactory.makeProductListRepositories())
+    private lazy var useCaseFactory = UseCaseFactory(
+        repositories: repositoryFactory.makeProductListRepositories(),
+        repositoryFactory: repositoryFactory
+    )
     
     // Factory for creating view model implementations
     @MainActor private lazy var viewModelFactory = ViewModelFactory(useCases: useCaseFactory.makeProductListUseCases(), cartServices: cartServices)

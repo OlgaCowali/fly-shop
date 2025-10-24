@@ -11,4 +11,5 @@ struct APIConstant {
     static let productCategoryURL = "/properties/categories"
     static let customerTypeURL = "/properties/customer_types"
     static let allProductsDataURL = "/data/"
+    static let paymentGatewayURL = "https://api.npoint.io/4815e5513f92384df075"
 }

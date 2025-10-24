@@ -11,9 +11,11 @@ import Foundation
 final class RepositoryFactory {
     
     private let dataSources: ProductListDataSources
+    private let dataSourceFactory: DataSourceFactory
     
-    init(dataSources: ProductListDataSources) {
+    init(dataSources: ProductListDataSources, dataSourceFactory: DataSourceFactory) {
         self.dataSources = dataSources
+        self.dataSourceFactory = dataSourceFactory
     }
     
     // Creates a customer type repository implementation
@@ -29,6 +31,11 @@ final class RepositoryFactory {
     // Creates a product list repository implementation
     func makeProductListRepository() -> ProductListRepository {
         ProductListRepositoryImpl(apiDataSource: dataSources.product)
+    }
+    
+    // Creates a payment repository implementation
+    func makePaymentRepository() -> PaymentRepository {
+        PaymentRepositoryImpl(apiDataSource: dataSourceFactory.makePaymentDataSource())
     }
     
     // Creates a container with all repositories needed for the product list feature

@@ -58,6 +58,20 @@ enum CartConstants {
     // Text
     static let emptyCartMessage: String = "Your cart is empty"
     
+    // MARK: - Empty Cart Alert
+    
+    // Text
+    static let emptyCartAlertTitle: String = "Cart is Empty"
+    static let emptyCartAlertMessage: String = "Please add some products to your cart before proceeding to payment."
+    static let emptyCartAlertButton: String = "OK"
+    
+    // MARK: - Payment Success Alert
+    
+    // Text
+    static let paymentSuccessAlertTitle: String = "Payment Successful"
+    static let paymentSuccessAlertMessage: String = "Your payment has been processed successfully. Thank you for your purchase!"
+    static let paymentSuccessAlertButton: String = "OK"
+    
     // MARK: - LoadingStateView
     
     // Text
@@ -218,6 +232,7 @@ enum CartConstants {
     static let invalidPaymentAmountMessage: String = "Invalid payment amount"
     static let invalidAmountFormatMessage: String = "Invalid amount format"
     static let paymentProcessingFailedMessage: String = "Payment processing failed:"
+    static let paymentFailedMessage: String = "Payment failed"
     
     // MARK: - CashPaymentService Constants
     
@@ -243,4 +258,90 @@ enum CartConstants {
     
     // Error message
     static let cashPaymentErrorMessageHorizontalPadding: CGFloat = 16
+    
+    // MARK: - CardPaymentView
+    
+    // Text
+    static let cardPaymentTitle: String = "Card Payment"
+    static let cardPaymentSubtitle: String = "Enter your card details"
+    static let cardNumberLabel: String = "Card Number"
+    static let cardNumberPlaceholder: String = "1234 5678 9012 3456"
+    static let expirationDateLabel: String = "Expiration Date"
+    static let expirationDatePlaceholder: String = "MM/YY"
+    static let cvvLabel: String = "CVV"
+    static let cvvPlaceholder: String = "123"
+    static let cardholderNameLabel: String = "Cardholder Name"
+    static let cardholderNamePlaceholder: String = "John Doe"
+    static let processingPaymentText: String = "Processing..."
+    static let invalidFormMessage: String = "Please fill in all fields correctly"
+    
+    // MARK: - CardPaymentService Error Messages
+    
+    // Error messages
+    static let networkErrorMessage: String = "Network error. Please check your connection."
+    static let serverUnavailableMessage: String = "Payment gateway is unavailable. Please try again."
+    static let invalidResponseMessage: String = "Invalid response from payment gateway."
+    static let authorizationFailedMessage: String = "Payment authorization failed."
+    static let serviceNotFoundMessage: String = "Payment service not found."
+    static let genericPaymentErrorMessage: String = "Payment processing failed. Please try again."
+    
+    // Dynamic error message helpers
+    static func paymentFailedMessage(status: String, statusCode: Int) -> String {
+        return "Payment failed with status: \(status) (code: \(statusCode))"
+    }
+    
+    // Layout
+    static let cardPaymentModalSpacing: CGFloat = 24
+    static let cardPaymentModalPadding: CGFloat = 24
+    static let cardPaymentModalHorizontalPadding: CGFloat = 32
+    static let cardPaymentModalCornerRadius: CGFloat = 16
+    static let cardPaymentHeaderSpacing: CGFloat = 8
+    static let cardPaymentFieldSpacing: CGFloat = 20
+    static let cardPaymentLabelSpacing: CGFloat = 8
+    static let cardPaymentInputPadding: CGFloat = 16
+    static let cardPaymentInputCornerRadius: CGFloat = 12
+    static let cardPaymentButtonSpacing: CGFloat = 16
+    static let cardPaymentButtonPadding: CGFloat = 16
+    static let cardPaymentButtonCornerRadius: CGFloat = 12
+    static let cardPaymentErrorMessageHorizontalPadding: CGFloat = 16
+    
+    // Animation
+    static let cardPaymentModalAnimationDuration: Double = 0.3
+    static let cardPaymentModalScale: CGFloat = 0.9
+    
+    // Typography
+    static let cardPaymentTitleFont: Font = .largeTitle
+    static let cardPaymentTitleFontWeight: Font.Weight = .bold
+    static let cardPaymentSubtitleFont: Font = .subheadline
+    static let cardPaymentLabelFont: Font = .caption
+    static let cardPaymentLabelFontWeight: Font.Weight = .medium
+    static let cardPaymentInputFont: Font = .body
+    static let cardPaymentButtonFont: Font = .headline
+    static let cardPaymentButtonFontWeight: Font.Weight = .medium
+    static let cardPaymentErrorMessageFont: Font = .caption
+    
+    // Colors
+    static let cardPaymentModalBackground = Color(.systemBackground)
+    static let cardPaymentTitleColor = Color.primary
+    static let cardPaymentSubtitleColor = Color.secondary
+    static let cardPaymentLabelColor = Color.primary
+    static let cardPaymentInputBackground = Color(.systemGray6)
+    static let cardPaymentInputBorderColor = Color(.systemGray4)
+    static let cardPaymentInputBorderWidth: CGFloat = 1
+    static let cardPaymentCancelButtonBackground = Color(.systemGray5)
+    static let cardPaymentCancelButtonTextColor = Color.primary
+    static let cardPaymentConfirmButtonBackground = Color.blue
+    static let cardPaymentConfirmButtonDisabledBackground = Color.gray
+    static let cardPaymentConfirmButtonTextColor = Color.white
+    static let cardPaymentErrorMessageColor = Color.red
+    static let cardPaymentModalShadowColor = Color.black
+    static let cardPaymentBackgroundOverlayOpacity: Double = 0.4
+    
+    // Shadow
+    static let cardPaymentModalShadowRadius: CGFloat = 20
+    static let cardPaymentModalShadowOffsetX: CGFloat = 0
+    static let cardPaymentModalShadowOffsetY: CGFloat = 10
+    
+    // Progress view
+    static let cardPaymentProgressViewScale: CGFloat = 0.8
 }

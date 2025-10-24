@@ -34,6 +34,11 @@ final class DataSourceFactory {
         )
     }
     
+    // Creates a payment data source implementation
+    func makePaymentDataSource() -> APIPaymentDataSource {
+        APIPaymentDataSourceImpl(httpClient: httpClient)
+    }
+    
     // Creates a container with all data sources needed for the product list feature
     func makeProductListDataSources() -> ProductListDataSources {
         let customerTypeDataSource = makeCustomerTypeDataSource()

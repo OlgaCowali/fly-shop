@@ -10,5 +10,6 @@ import Foundation
 // Container struct that holds all service dependencies for the cart feature
 struct CartServices {
     let sessionService: CartSessionService
-    let paymentService: CashPaymentService
+    let cashPaymentService: CashPaymentService
+    let cardPaymentService: CardPaymentService
 }
