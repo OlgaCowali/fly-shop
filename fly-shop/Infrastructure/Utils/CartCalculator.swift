@@ -32,4 +32,12 @@ final class CartCalculator {
         }
         return unitPrice * Decimal(product.quantity)
     }
+    
+    // Calculates the change amount for cash payments
+    static func calculateChange(amountPaid: Decimal, totalAmount: Decimal) -> Decimal {
+        guard amountPaid >= totalAmount else {
+            return 0
+        }
+        return amountPaid - totalAmount
+    }
 }

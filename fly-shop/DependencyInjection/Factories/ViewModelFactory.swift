@@ -11,11 +11,11 @@ import Foundation
 final class ViewModelFactory {
     
     private let useCases: ProductListUseCases
-    private let cartService: CartSessionService
+    private let cartServices: CartServices
     
-    init(useCases: ProductListUseCases, cartService: CartSessionService) {
+    init(useCases: ProductListUseCases, cartServices: CartServices) {
         self.useCases = useCases
-        self.cartService = cartService
+        self.cartServices = cartServices
     }
     
     // MARK: - ViewModels
@@ -26,7 +26,7 @@ final class ViewModelFactory {
             getProductListUseCase: useCases.getProductList,
             getCategoriesUseCase: useCases.getCategories,
             getCustomerTypesUseCase: useCases.getCustomerTypes,
-            cartService: cartService
+            cartService: cartServices.sessionService
         )
     }
     
@@ -34,7 +34,36 @@ final class ViewModelFactory {
     @MainActor func makeCartViewViewModel(selectedCurrency: Currency) -> CartViewViewModel {
         CartViewViewModel(
             selectedCurrency: selectedCurrency,
-            sessionService: cartService
+            sessionService: cartServices.sessionService,
+            paymentService: cartServices.cashPaymentService,
+            cardPaymentService: cartServices.cardPaymentService
         )
     }
+    
+    // Creates a cash payment view model with payment service and payment details
+    @MainActor func makeCashPaymentViewModel(
+        totalAmount: Decimal,
+        currency: Currency,
+        paymentService: CashPaymentService
+    ) -> CashPaymentViewModel {
+        CashPaymentViewModel(
+            paymentService: paymentService,
+            totalAmount: totalAmount,
+            currency: currency
+        )
+    }
+    
+    // Creates a card payment view model with payment service and payment details
+    @MainActor func makeCardPaymentViewModel(
+        totalAmount: Decimal,
+        currency: Currency,
+        paymentService: CardPaymentService
+    ) -> CardPaymentViewModel {
+        CardPaymentViewModel(
+            paymentService: paymentService,
+            totalAmount: totalAmount,
+            currency: currency
+        )
+    }
+    
 }

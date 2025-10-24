@@ -20,11 +20,20 @@ final class CartViewViewModel: ObservableObject {
         }
     }
     @Published var showCashPaymentView = false
+    @Published var showCardPaymentView = false
+    @Published var showEmptyCartAlert = false
+    @Published var showPaymentSuccessAlert = false
     
     // MARK: - Dependencies
     private let sessionService: CartSessionService
+    private let paymentService: CashPaymentService
+    private let cardPaymentService: CardPaymentService
     private let stateService: CartStateService
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Payment ViewModels
+    @Published private(set) var cashPaymentViewModel: CashPaymentViewModel?
+    @Published private(set) var cardPaymentViewModel: CardPaymentViewModel?
     
     // MARK: - Computed Properties
     
@@ -54,10 +63,14 @@ final class CartViewViewModel: ObservableObject {
     init(
         selectedCurrency: Currency,
         sessionService: CartSessionService,
+        paymentService: CashPaymentService,
+        cardPaymentService: CardPaymentService,
         stateManager: CartStateService? = nil
     ) {
         self.selectedCurrency = selectedCurrency
         self.sessionService = sessionService
+        self.paymentService = paymentService
+        self.cardPaymentService = cardPaymentService
         self.stateService = stateManager ?? CartStateService()
         self.selectedSeat = sessionService.selectedSeat
         
@@ -91,12 +104,63 @@ final class CartViewViewModel: ObservableObject {
     
     // Shows the cash payment view
     func showCashPayment() {
+        guard !selectedProducts.isEmpty else {
+            showEmptyCartAlert = true
+            return
+        }
+        
+        cashPaymentViewModel = CashPaymentViewModel(
+            paymentService: paymentService,
+            totalAmount: totalAmount,
+            currency: selectedCurrency
+        )
         showCashPaymentView = true
     }
     
     // Hides the cash payment view
     func hideCashPayment() {
         showCashPaymentView = false
+        cashPaymentViewModel = nil
+    }
+    
+    // Shows the card payment view
+    func showCardPayment() {
+        guard !selectedProducts.isEmpty else {
+            showEmptyCartAlert = true
+            return
+        }
+        
+        cardPaymentViewModel = CardPaymentViewModel(
+            paymentService: cardPaymentService,
+            totalAmount: totalAmount,
+            currency: selectedCurrency
+        )
+        showCardPaymentView = true
+    }
+    
+    // Hides the card payment view
+    func hideCardPayment() {
+        showCardPaymentView = false
+        cardPaymentViewModel = nil
+    }
+    
+    // Handles successful payment completion
+    func handlePaymentSuccess() {
+        // Show success alert
+        showPaymentSuccessAlert = true
+    }
+    
+    // Called when user dismisses the success alert
+    func handleSuccessAlertDismissal() {
+        // Clear the cart
+        sessionService.clearCart()
+        // Dismiss the cart view
+        dismiss()
+    }
+    
+    // Returns the payment service for use in CashPaymentView
+    func getPaymentService() -> CashPaymentService {
+        return paymentService
     }
     
     // MARK: - Private Methods

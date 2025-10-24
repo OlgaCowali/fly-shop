@@ -39,27 +39,57 @@ struct CartView: View {
                         viewModel.showCashPayment()
                     },
                     onCardPayment: {
-                        // TODO: Handle card payment
-                        print("Card payment selected")
+                        viewModel.showCardPayment()
                     }
                 )
             }
             .navigationBarHidden(true)
         }
+        .alert(CartConstants.emptyCartAlertTitle, isPresented: $viewModel.showEmptyCartAlert) {
+            Button(CartConstants.emptyCartAlertButton, role: .cancel) { }
+        } message: {
+            Text(CartConstants.emptyCartAlertMessage)
+        }
+        .alert(CartConstants.paymentSuccessAlertTitle, isPresented: $viewModel.showPaymentSuccessAlert) {
+            Button(CartConstants.paymentSuccessAlertButton, role: .cancel) {
+                viewModel.handleSuccessAlertDismissal()
+                dismiss()
+            }
+        } message: {
+            Text(CartConstants.paymentSuccessAlertMessage)
+        }
         .overlay(
-            // Cash Payment Modal
+            // Payment Modals
             Group {
-//                if viewModel.showCashPaymentView {
-//                    CashPaymentView(
-//                        isPresented: $viewModel.showCashPaymentView,
-//                        totalAmount: viewModel.totalAmount,
-//                        currency: viewModel.selectedCurrency
-//                    )
-//                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
-//                }
+                // Cash Payment Modal
+                if viewModel.showCashPaymentView,
+                   let cashPaymentViewModel = viewModel.cashPaymentViewModel {
+                    CashPaymentView(
+                        isPresented: $viewModel.showCashPaymentView,
+                        onPaymentSuccess: {
+                            viewModel.handlePaymentSuccess()
+                        },
+                        viewModel: cashPaymentViewModel
+                    )
+                    .transition(.opacity.combined(with: .scale(scale: CartConstants.cashPaymentModalScale)))
+                }
+                
+                // Card Payment Modal
+                if viewModel.showCardPaymentView,
+                   let cardPaymentViewModel = viewModel.cardPaymentViewModel {
+                    CardPaymentView(
+                        isPresented: $viewModel.showCardPaymentView,
+                        onPaymentSuccess: {
+                            viewModel.handlePaymentSuccess()
+                        },
+                        viewModel: cardPaymentViewModel
+                    )
+                    .transition(.opacity.combined(with: .scale(scale: CartConstants.cardPaymentModalScale)))
+                }
             }
         )
-        .animation(.easeInOut(duration: 0.3), value: viewModel.showCashPaymentView)
+        .animation(.easeInOut(duration: CartConstants.cashPaymentModalAnimationDuration), value: viewModel.showCashPaymentView)
+        .animation(.easeInOut(duration: CartConstants.cardPaymentModalAnimationDuration), value: viewModel.showCardPaymentView)
     }
     
     // MARK: - Private Views
