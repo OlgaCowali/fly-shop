@@ -17,7 +17,8 @@ struct RepositoryFactoryTests {
     func testMakeCustomerTypeRepository() {
         // Given
         let mockDataSources = createMockDataSources()
-        let factory = RepositoryFactory(dataSources: mockDataSources)
+        let mockDataSourceFactory = createMockDataSourceFactory()
+        let factory = RepositoryFactory(dataSources: mockDataSources, dataSourceFactory: mockDataSourceFactory)
         
         // When
         let repository = factory.makeCustomerTypeRepository()
@@ -30,7 +31,8 @@ struct RepositoryFactoryTests {
     func testMakeCategoryRepository() {
         // Given
         let mockDataSources = createMockDataSources()
-        let factory = RepositoryFactory(dataSources: mockDataSources)
+        let mockDataSourceFactory = createMockDataSourceFactory()
+        let factory = RepositoryFactory(dataSources: mockDataSources, dataSourceFactory: mockDataSourceFactory)
         
         // When
         let repository = factory.makeCategoryRepository()
@@ -43,7 +45,8 @@ struct RepositoryFactoryTests {
     func testMakeProductListRepository() {
         // Given
         let mockDataSources = createMockDataSources()
-        let factory = RepositoryFactory(dataSources: mockDataSources)
+        let mockDataSourceFactory = createMockDataSourceFactory()
+        let factory = RepositoryFactory(dataSources: mockDataSources, dataSourceFactory: mockDataSourceFactory)
         
         // When
         let repository = factory.makeProductListRepository()
@@ -52,11 +55,26 @@ struct RepositoryFactoryTests {
         #expect(repository is ProductListRepositoryImpl)
     }
     
+    @Test("Should create payment repository")
+    func testMakePaymentRepository() {
+        // Given
+        let mockDataSources = createMockDataSources()
+        let mockDataSourceFactory = createMockDataSourceFactory()
+        let factory = RepositoryFactory(dataSources: mockDataSources, dataSourceFactory: mockDataSourceFactory)
+        
+        // When
+        let repository = factory.makePaymentRepository()
+        
+        // Then
+        #expect(repository is PaymentRepositoryImpl)
+    }
+    
     @Test("Should create product list repositories container")
     func testMakeProductListRepositories() {
         // Given
         let mockDataSources = createMockDataSources()
-        let factory = RepositoryFactory(dataSources: mockDataSources)
+        let mockDataSourceFactory = createMockDataSourceFactory()
+        let factory = RepositoryFactory(dataSources: mockDataSources, dataSourceFactory: mockDataSourceFactory)
         
         // When
         let repositories = factory.makeProductListRepositories()
@@ -73,7 +91,8 @@ struct RepositoryFactoryTests {
     func testConsistentRepositoryCreation() {
         // Given
         let mockDataSources = createMockDataSources()
-        let factory = RepositoryFactory(dataSources: mockDataSources)
+        let mockDataSourceFactory = createMockDataSourceFactory()
+        let factory = RepositoryFactory(dataSources: mockDataSources, dataSourceFactory: mockDataSourceFactory)
         
         // When
         let firstCall = factory.makeProductListRepositories()
@@ -92,7 +111,8 @@ struct RepositoryFactoryTests {
     func testUsesSameDataSources() {
         // Given
         let mockDataSources = createMockDataSources()
-        let factory = RepositoryFactory(dataSources: mockDataSources)
+        let mockDataSourceFactory = createMockDataSourceFactory()
+        let factory = RepositoryFactory(dataSources: mockDataSources, dataSourceFactory: mockDataSourceFactory)
         
         // When
         let repositories = factory.makeProductListRepositories()
@@ -111,8 +131,10 @@ struct RepositoryFactoryTests {
         // Given
         let mockDataSources1 = createMockDataSources()
         let mockDataSources2 = createMockDataSources()
-        let factory1 = RepositoryFactory(dataSources: mockDataSources1)
-        let factory2 = RepositoryFactory(dataSources: mockDataSources2)
+        let mockDataSourceFactory1 = createMockDataSourceFactory()
+        let mockDataSourceFactory2 = createMockDataSourceFactory()
+        let factory1 = RepositoryFactory(dataSources: mockDataSources1, dataSourceFactory: mockDataSourceFactory1)
+        let factory2 = RepositoryFactory(dataSources: mockDataSources2, dataSourceFactory: mockDataSourceFactory2)
         
         // When
         let repositories1 = factory1.makeProductListRepositories()
@@ -135,5 +157,10 @@ struct RepositoryFactoryTests {
             category: MockAPICategoriesDataSource(),
             product: MockAPIProductsDataSource()
         )
+    }
+    
+    private func createMockDataSourceFactory() -> DataSourceFactory {
+        let mockHTTPClient = MockHTTPClient()
+        return DataSourceFactory(httpClient: mockHTTPClient)
     }
 }

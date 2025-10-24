@@ -115,6 +115,7 @@ final class ProductListViewModel: ObservableObject {
     // Selects a customer type and reloads products with new pricing
     func selectCustomerType(_ customerType: CustomerType) {
         selectedCustomerType = customerType
+        cartService.clearCart() // Clear cart when customer type changes
         reloadProducts() // Reload products as pricing may differ
     }
     

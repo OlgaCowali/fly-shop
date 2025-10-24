@@ -8,7 +8,7 @@
 import Foundation
 
 // Factory responsible for creating data source implementations for API operations
-final class DataSourceFactory {
+final class DataSourceFactory: DataSourceFactoryProtocol {
     
     private let httpClient: HTTPClientProtocol
     

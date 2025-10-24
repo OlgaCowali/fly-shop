@@ -24,17 +24,5 @@ struct CardNumber: Equatable {
         
         self.value = cleaned
     }
-    
-    // Returns formatted card number with spaces (XXXX XXXX XXXX XXXX)
-    var formatted: String {
-        var result = ""
-        for (index, character) in value.enumerated() {
-            if index > 0 && index % 4 == 0 {
-                result += " "
-            }
-            result.append(character)
-        }
-        return result
-    }
 }
 

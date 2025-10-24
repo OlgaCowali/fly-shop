@@ -52,6 +52,19 @@ struct DataSourceFactoryTests {
         #expect(dataSource is APIProductListDataSourceImpl)
     }
     
+    @Test("Should create payment data source")
+    func testMakePaymentDataSource() {
+        // Given
+        let mockHTTPClient = MockHTTPClient()
+        let factory = DataSourceFactory(httpClient: mockHTTPClient)
+        
+        // When
+        let dataSource = factory.makePaymentDataSource()
+        
+        // Then
+        #expect(dataSource is APIPaymentDataSourceImpl)
+    }
+    
     @Test("Should create product list data sources container")
     func testMakeProductListDataSources() {
         // Given

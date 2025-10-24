@@ -8,7 +8,7 @@ import SwiftUI
 import Foundation
 
 @MainActor
-final class CartStateService: ObservableObject {
+final class CartStateService: CartStateServiceProtocol {
     @Published private(set) var state: ViewState = .loading
     @Published private(set) var error: DomainError?
     

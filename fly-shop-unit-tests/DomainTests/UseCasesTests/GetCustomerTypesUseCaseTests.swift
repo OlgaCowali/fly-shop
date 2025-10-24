@@ -30,7 +30,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 1)
@@ -57,7 +57,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 1)
@@ -80,7 +80,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 1)
@@ -101,7 +101,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 1)
@@ -122,7 +122,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 1)
@@ -143,7 +143,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 1)
@@ -164,7 +164,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 1)
@@ -185,7 +185,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result = await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 1)
@@ -208,9 +208,9 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        _ = try await useCase.execute()
-        _ = try await useCase.execute()
-        _ = try await useCase.execute()
+        _ =  await useCase.execute()
+        _ =  await useCase.execute()
+        _ =  await useCase.execute()
         
         // Then
         #expect(mockRepository.getCustomerTypesCallCount == 3)
@@ -229,7 +229,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result =  await useCase.execute()
         
         // Then
         switch result {
@@ -254,7 +254,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result =  await useCase.execute()
         
         // Then
         switch result {
@@ -280,7 +280,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result =  await useCase.execute()
         
         // Then
         switch result {
@@ -302,7 +302,7 @@ struct GetCustomerTypesUseCaseTests {
         let useCase = GetCustomerTypesUseCase(repository: mockRepository)
         
         // When
-        let result = try await useCase.execute()
+        let result =  await useCase.execute()
         
         // Then
         switch result {

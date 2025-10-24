@@ -16,9 +16,15 @@ struct CartViewViewModelTests {
     @Test("Initialization with default state manager")
     func testInitializationWithDefaultStateManager() async {
         let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
         let viewModel = CartViewViewModel(
             selectedCurrency: .usd,
-            sessionService: mockSessionService
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
         )
         
         #expect(viewModel.selectedCurrency == .usd)
@@ -33,9 +39,15 @@ struct CartViewViewModelTests {
     @Test("Dismiss sets isDismissed to true")
     func testDismissSetsIsDismissedToTrue() async {
         let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
         let viewModel = CartViewViewModel(
             selectedCurrency: .usd,
-            sessionService: mockSessionService
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
         )
         
         #expect(viewModel.isDismissed == false)
@@ -45,11 +57,36 @@ struct CartViewViewModelTests {
         #expect(viewModel.isDismissed == true)
     }
     
+    @Test("Selected seat change calls session service")
+    func testSelectedSeatChangeCallsSessionService() async {
+        let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
+        let viewModel = CartViewViewModel(
+            selectedCurrency: .usd,
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
+        )
+        
+        #expect(mockSessionService.updateSeatCallCount == 0)
+        
+        viewModel.selectedSeat = "B 2"
+        
+        #expect(mockSessionService.updateSeatCallCount == 1)
+        #expect(mockSessionService.updateSeatCalledWithSeat == "B 2")
+    }
+    
     // MARK: - Computed Properties Tests
     
     @Test("Selected products returns session service products")
     func testSelectedProductsReturnsSessionServiceProducts() async {
         let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
         let product1 = createTestProduct(name: "Product 1")
         let product2 = createTestProduct(name: "Product 2")
         
@@ -57,7 +94,10 @@ struct CartViewViewModelTests {
         
         let viewModel = CartViewViewModel(
             selectedCurrency: .usd,
-            sessionService: mockSessionService
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
         )
         
         #expect(viewModel.selectedProducts.count == 2)
@@ -70,10 +110,16 @@ struct CartViewViewModelTests {
     @Test("Remove product calls session service")
     func testRemoveProductCallsSessionService() async {
         let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
         let productId = UUID()
         let viewModel = CartViewViewModel(
             selectedCurrency: .usd,
-            sessionService: mockSessionService
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
         )
         
         viewModel.removeProduct(productId: productId)
@@ -88,6 +134,9 @@ struct CartViewViewModelTests {
     @Test("Currency change updates total calculation")
     func testCurrencyChangeUpdatesTotalCalculation() async {
         let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
         let product = createTestProduct(
             prices: [.usd: 10.0, .eur: 9.0, .gbp: 8.0],
             quantity: 2
@@ -96,7 +145,10 @@ struct CartViewViewModelTests {
         
         let viewModel = CartViewViewModel(
             selectedCurrency: .usd,
-            sessionService: mockSessionService
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
         )
         
         #expect(viewModel.totalAmount == 20.0) // 10.0 * 2
@@ -108,6 +160,83 @@ struct CartViewViewModelTests {
         viewModel.selectedCurrency = .gbp
         
         #expect(viewModel.totalAmount == 16.0) // 8.0 * 2
+    }
+    
+    // MARK: - Payment Tests
+    
+    @Test("Show cash payment with empty cart shows alert")
+    func testShowCashPaymentWithEmptyCartShowsAlert() async {
+        let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
+        let viewModel = CartViewViewModel(
+            selectedCurrency: .usd,
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
+        )
+        
+        #expect(viewModel.showEmptyCartAlert == false)
+        
+        viewModel.showCashPayment()
+        
+        #expect(viewModel.showEmptyCartAlert == true)
+        #expect(viewModel.showCashPaymentView == false)
+    }
+    
+    @Test("Show cash payment with products creates view model")
+    func testShowCashPaymentWithProductsCreatesViewModel() async {
+        let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
+        let product = createTestProduct(prices: [.usd: 10.0], quantity: 1)
+        mockSessionService.selectedProducts = [product]
+        
+        let viewModel = CartViewViewModel(
+            selectedCurrency: .usd,
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
+        )
+        
+        #expect(viewModel.showCashPaymentView == false)
+        #expect(viewModel.cashPaymentViewModel == nil)
+        
+        viewModel.showCashPayment()
+        
+        #expect(viewModel.showCashPaymentView == true)
+        #expect(viewModel.cashPaymentViewModel != nil)
+    }
+    
+    @Test("Hide cash payment resets state")
+    func testHideCashPaymentResetsState() async {
+        let mockSessionService = MockCartSessionService()
+        let mockCashPaymentService = MockCashPaymentService()
+        let mockCardPaymentService = MockCardPaymentService()
+        let mockStateService = MockCartStateService()
+        let product = createTestProduct(prices: [.usd: 10.0], quantity: 1)
+        mockSessionService.selectedProducts = [product]
+        
+        let viewModel = CartViewViewModel(
+            selectedCurrency: .usd,
+            sessionService: mockSessionService,
+            paymentService: mockCashPaymentService,
+            cardPaymentService: mockCardPaymentService,
+            stateManager: mockStateService
+        )
+        
+        viewModel.showCashPayment()
+        #expect(viewModel.showCashPaymentView == true)
+        #expect(viewModel.cashPaymentViewModel != nil)
+        
+        viewModel.hideCashPayment()
+        
+        #expect(viewModel.showCashPaymentView == false)
+        #expect(viewModel.cashPaymentViewModel == nil)
     }
     
     // MARK: - Helper Methods

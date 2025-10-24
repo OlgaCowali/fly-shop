@@ -86,7 +86,7 @@ struct HTTPClientTests {
         case .success:
             Issue.record("Expected failure but got success")
         case .failure(let error):
-            #expect(error == .responseError || error == .clientError)
+            #expect(error == .clientError)
         }
     }
     
@@ -104,7 +104,7 @@ struct HTTPClientTests {
         case .success:
             Issue.record("Expected failure but got success")
         case .failure(let error):
-            #expect(error == .responseError || error == .clientError)
+            #expect(error == .clientError)
         }
     }
     

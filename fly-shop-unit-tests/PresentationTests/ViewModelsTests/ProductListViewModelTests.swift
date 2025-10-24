@@ -311,6 +311,9 @@ struct ProductListViewModelTests {
         #expect(viewModel.selectedCustomerType == testCustomerType2)
         #expect(mockGetProductList.executeCallCount == 2)
         #expect(viewModel.state == .loaded)
+        
+        // Verify that cart was cleared when customer type changed
+        #expect(mockCartService.clearCartCallCount == 1)
     }
     
     // MARK: - Currency Selection Tests

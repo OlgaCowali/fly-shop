@@ -29,22 +29,25 @@ final class HTTPClient: HTTPClientProtocol {
             }
             
             request
-                .validate()
                 .responseData { response in
-                    switch response.result {
-                    case .success(let data):
-                        continuation.resume(returning: .success(data))
-                    case .failure(_):
-                        if let status = response.response?.statusCode {
-                            switch status {
-                            case 400..<500: continuation.resume(returning: .failure(.clientError))
-                            case 500..<600: continuation.resume(returning: .failure(.serverError))
-                            default:        continuation.resume(returning: .failure(.responseError))
+                    if let status = response.response?.statusCode {
+                        switch status {
+                        case 200..<300:
+                            if let data = response.data {
+                                continuation.resume(returning: .success(data))
+                            } else {
+                                continuation.resume(returning: .failure(.responseError))
                             }
-                        } else {
-                            // No HTTP response (connectivity, timeout, etc.)
+                        case 400..<500:
+                            continuation.resume(returning: .failure(.clientError))
+                        case 500..<600:
+                            continuation.resume(returning: .failure(.serverError))
+                        default:
                             continuation.resume(returning: .failure(.responseError))
                         }
+                    } else {
+                        // No HTTP response (connectivity, timeout, etc.)
+                        continuation.resume(returning: .failure(.responseError))
                     }
                 }
         }
